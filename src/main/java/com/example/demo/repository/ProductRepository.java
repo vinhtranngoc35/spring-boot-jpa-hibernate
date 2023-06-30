@@ -1,6 +1,8 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,9 +14,9 @@ public interface ProductRepository  extends JpaRepository<Product, Long> {
             "p.code like :search or " +
             "p.title like :search or " +
             "p.category.name like :search")
-    List<Product> searchEverything(String search);
+    Page<Product> searchEverything(String search, Pageable pageable);
 
 
 
-    List<Product> findByTitleContainingOrCodeContainingOrCategory_NameContaining(String title, String code, String category_name);
+    Page<Product> findByTitleContainingOrCodeContainingOrCategory_NameContaining(String title, String code, String category_name, Pageable pageable);
 }

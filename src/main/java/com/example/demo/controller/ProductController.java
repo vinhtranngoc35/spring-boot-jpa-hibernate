@@ -4,32 +4,64 @@ import com.example.demo.model.Category;
 import com.example.demo.model.Product;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
+import com.example.demo.service.product.ProductService;
+import com.example.demo.service.product.request.ProductSaveRequest;
+import com.example.demo.service.product.request.SelectOptionRequest;
+import com.example.demo.service.product.response.ProductListResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/data")
 public class ProductController {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductService productService;
 
-
-    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, ProductService productService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.productService = productService;
     }
 
-    @GetMapping("/{search}")
-    public List<Product> createProduct(@PathVariable String search){
-        // save category id =
-        return productRepository.findByTitleContainingOrCodeContainingOrCategory_NameContaining(search, search,search);
+    @GetMapping("/create")
+    public ModelAndView showFormCreate(Model model){
+        ModelAndView view = new ModelAndView("create");
+        view.addObject("categories", categoryRepository.findAll());
+        view.addObject("product", new ProductSaveRequest("", "", new SelectOptionRequest("")));
+        return view;
+    }
+
+    @PostMapping("/create")
+    public String showFormCreate(@ModelAttribute("product") ProductSaveRequest product, Model model){
+       productService.create(product);
+
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("product", product);
+        return "create";
+    }
+
+//    @PostMapping("/edit/{id}")
+//    public String showFormCreate(@ModelAttribute("product") ProductSaveRequest product, Model model){
+//        productService.update(product);
+//
+//        model.addAttribute("categories", categoryRepository.findAll());
+//        model.addAttribute("product", product);
+//        return "create";
+//    }
+
+    @GetMapping
+    public String createProduct(@RequestParam(defaultValue = "") String search, @PageableDefault(size = 3) Pageable pageable, Model model){
+        model.addAttribute("products", productService.findAllWithSearchAndPaging(search, pageable));
+        return "index";
     }
 //    @GetMapping
 //    public String showProducts(Model model) {

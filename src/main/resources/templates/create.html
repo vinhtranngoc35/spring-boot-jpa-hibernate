@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <form th:object="${product}" action="/data/create" method="post">
+    <input th:field="*{title}">
+    <input th:field="*{price}">
+      <select th:field="*{category.id}">
+          <th:block th:each="category : ${categories}">
+              <option th:value="${category.id}" th:text="${category.name}"></option>
+          </th:block>
+      </select>
+      <button>Submit</button>
+  </form>
+</body>
+</html>
