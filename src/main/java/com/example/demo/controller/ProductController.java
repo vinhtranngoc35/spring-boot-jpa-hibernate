@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
-@RequestMapping("/data")
+@RequestMapping("/products")
 public class ProductController {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -33,7 +33,7 @@ public class ProductController {
     }
 
     @GetMapping("/create")
-    public ModelAndView showFormCreate(Model model){
+    public ModelAndView showFormCreate(){
         ModelAndView view = new ModelAndView("create");
         view.addObject("categories", categoryRepository.findAll());
         view.addObject("product", new ProductSaveRequest("", "", new SelectOptionRequest("")));
