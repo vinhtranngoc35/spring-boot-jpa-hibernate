@@ -45,7 +45,7 @@ public class BillSaveRequest {
         this.billDetails = billDetails;
     }
 
-    static class CustomerSaveRequest{
+    public static class CustomerSaveRequest{
         @NotBlank
         private String name;
 
@@ -103,7 +103,7 @@ public class BillSaveRequest {
         }
     }
 
-    static class BillDetailSaveRequest{
+    public static class BillDetailSaveRequest{
         private SelectOptionRequest product;
 
         private String price;

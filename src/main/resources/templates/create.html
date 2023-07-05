@@ -9,13 +9,13 @@
     <form th:object="${bill}" th:action="@{/bills/create}" method="post" class="row g-3 card" style="padding: 2rem 4rem; flex-direction: row">
         <div class="col-md-6">
             <label for="name" class="form-label">Full Name</label>
-            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('customer.name')} ? 'is-invalid' : ''" id="name" th:field="*{customer.name}">
+            <input type="text" class="form-control" id="name" th:field="*{customer.name}">
             <div class="invalid-feedback" th:if="${#fields.hasErrors('customer.name')}" th:errors="*{customer.name}"></div>
         </div>
         <div class="col-md-6">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control"
-                   th:classappend="${#fields.hasErrors('customer.email')} ? 'is-invalid' : ''"
+
                    id="email" th:field="*{customer.email}">
             <div class="invalid-feedback" th:if="${#fields.hasErrors('customer.email')}" th:errors="*{customer.email}"></div>
         </div>
@@ -195,6 +195,8 @@
         billDetails[index].quantity = +e.value;
     }
     function extractNumberFromString(str) {
+        //str12 => 12
+        //mot => 1
         let number = str.match(/\d+/);
         return parseInt(number);
     }

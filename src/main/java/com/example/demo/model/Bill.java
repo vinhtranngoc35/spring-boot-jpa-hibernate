@@ -19,11 +19,11 @@ public class Bill {
 
     private BigDecimal totalAmount;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.PERSIST)
     private Set<BillDetail> billDetails;
 
     @Enumerated(EnumType.STRING)

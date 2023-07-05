@@ -34,7 +34,7 @@ public class ProductController {
 
     @GetMapping("/create")
     public ModelAndView showFormCreate(){
-        ModelAndView view = new ModelAndView("create");
+        ModelAndView view = new ModelAndView("/products/create");
         view.addObject("categories", categoryRepository.findAll());
         view.addObject("product", new ProductSaveRequest("", "", new SelectOptionRequest("")));
         return view;
@@ -46,7 +46,7 @@ public class ProductController {
 
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("product", product);
-        return "create";
+        return "/products/create";
     }
 
 //    @PostMapping("/edit/{id}")
