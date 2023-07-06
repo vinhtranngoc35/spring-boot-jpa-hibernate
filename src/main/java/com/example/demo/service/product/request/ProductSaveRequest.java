@@ -2,8 +2,10 @@ package com.example.demo.service.product.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class ProductSaveRequest {
+    @NotBlank
     private String price;
     private String title;
     private SelectOptionRequest category;

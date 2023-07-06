@@ -61,4 +61,8 @@ public class ProductService {
         //newProduct.setCategory(new Category(Long.valueOf(request.getCategoryId())));
         productRepository.save(newProduct);
     }
+
+    public void delete(Long id){
+        productRepository.deleteById(id);
+    }
 }
