@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//Show List Product
+//Viết API trả về List Product
+//Viết AJAX call API để trả về Client.
+
+
 @RestController // Tạo Api Controller
 @RequestMapping("/api/products")
 public class ProductRestController {
