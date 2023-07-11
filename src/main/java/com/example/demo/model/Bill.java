@@ -2,12 +2,14 @@ package com.example.demo.model;
 
 import com.example.demo.model.enums.EStatusCart;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
+@Table(name = "bills")
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

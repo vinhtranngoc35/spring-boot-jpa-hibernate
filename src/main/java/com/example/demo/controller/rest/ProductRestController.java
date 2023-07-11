@@ -3,6 +3,9 @@ package com.example.demo.controller.rest;
 import com.example.demo.service.product.ProductService;
 import com.example.demo.service.product.request.ProductSaveRequest;
 import com.example.demo.service.product.response.ProductListResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +30,13 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public Page<ProductListResponse> findAll(@RequestParam(defaultValue = "") String search, Pageable pageable){
-        return productService.findAllWithSearchAndPaging(search, pageable);
+    public Page<ProductListResponse> findAll(@RequestParam(defaultValue = "") String search,
+                                             @RequestParam(defaultValue = "", required = false) String priceMin,
+                                             @RequestParam(defaultValue = "") String priceMax,
+
+                                             Pageable pageable){
+
+        return productService.findAllWithSearchAndPaging(search, priceMin, priceMax, pageable);
     }
 
     @PostMapping

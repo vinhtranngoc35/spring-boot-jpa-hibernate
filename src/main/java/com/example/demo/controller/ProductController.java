@@ -8,6 +8,9 @@ import com.example.demo.service.product.ProductService;
 import com.example.demo.service.product.request.ProductSaveRequest;
 import com.example.demo.service.product.request.SelectOptionRequest;
 import com.example.demo.service.product.response.ProductListResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -59,8 +62,18 @@ public class ProductController {
 //    }
 
     @GetMapping
-    public String createProduct(@RequestParam(defaultValue = "") String search, @PageableDefault(size = 3) Pageable pageable, Model model){
-        model.addAttribute("products", productService.findAllWithSearchAndPaging(search, pageable));
+    public String createProduct(@RequestParam(defaultValue = "") String search, @PageableDefault(size = 3) Pageable pageable, Model model,
+                                @CookieValue(defaultValue = "", value = "demo") String demo,
+                                HttpServletResponse response,
+                                HttpServletRequest request){
+        Cookie cookie = new Cookie("demo", "Hello");
+        response.addCookie(cookie);
+        cookie.setMaxAge(24 * 60 * 60);
+        var cookies = request.getCookies();
+        for (var item : cookies) {
+            System.out.println(item.getValue());
+        }
+        //model.addAttribute("products", productService.findAllWithSearchAndPaging(search, "", "", pageable));
         return "index";
     }
 //    @GetMapping

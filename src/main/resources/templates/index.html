@@ -1,22 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="layout.html :: header">
+<head th:include="layout.html :: header">
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .search{
+            border: aquamarine 2px solid !important;
+        }
+        .spinner-border{
+            width: 50px;
+            height: 50px;
+        }
+        #loading{
+            align-items: center;
+            height: 400px;
+            justify-content: center;
+        }
+
+    </style>
 </head>
 <body>
 <div class="container">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-            onclick="showEdit(-1)">
-        Create
-    </button>
+    <div class="wrapper">
+        <div class="values">
+            <span id="range1">
+                0
+            </span>
+            <span> &dash; </span>
+            <span id="range2">
+                100
+            </span>
+        </div>
+        <div class="container">
+            <div class="slider-track"></div>
+            <input type="range" min="0" max="100" value="30" id="slider-1" oninput="slideOne()">
+            <input type="range" min="0" max="100" value="70" id="slider-2" oninput="slideTwo()">
+        </div>
+    </div>
+    <div class="row" style="margin: 20px 0">
+        <div class="col-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    onclick="showEdit(-1)">
+                Create
+            </button>
+        </div>
+        <div class="col-8">
+            <input class="form-control search" type="search" id="search" oninput="onSearch()" />
+        </div>
+    </div>
+
+
+    <div class="row" style="margin: 20px 0">
+        <h3>Price range</h3>
+        <div class="col-4">
+            <input class="form-control" type="number" id="min" value="0" />
+        </div>
+        <div class="col-4">
+            <input type="number" value="10000000" id="max" class="form-control" />
+        </div>
+        <div class="col-2">
+            <button onclick="onFilter()" class="btn btn-info" type="button">Filter</button>
+        </div>
+
+    </div>
     <table class="table table-striped table-hover">
         <tr>
-            <td>Id</td>
-            <td>Title</td>
-            <td>Code</td>
-            <td>Price</td>
-            <td>Category</td>
+            <td onclick="onSort('id')">Id</td>
+            <td onclick="onSort('title')">Title</td>
+            <td onclick="onSort('code')">Code</td>
+            <td onclick="onSort('price')">Price</td>
+            <td onclick="onSort('category.name')">Category</td>
             <td>Action</td>
         </tr>
         <tbody id="body">
@@ -24,19 +77,12 @@
         </tbody>
 
     </table>
+<!--    <div id="loading" style="height: 400px; align-items: center; justify-content: center; display: flex">-->
+
+<!--    </div>-->
     <nav aria-label="...">
         <ul id="pagination" class="pagination">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active" aria-current="page">
-                <a class="page-link" href="#">2</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
+
         </ul>
     </nav>
 
@@ -71,8 +117,15 @@
     let productSelected;
     let myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
     let page = 0
-    let size = 5
+    let size = 10
     let totalPage = 0
+    let search = "";
+    let sort = {
+        field: 'id',
+        sortBy: 'desc'
+    }
+    let min = 0;
+    let max = 10000000;
 
     function showEdit(index) {
         let product;
@@ -93,7 +146,7 @@
             {
                 label: "Title",
                 name: "title",
-                pattern: "^[A-Za-z]{6,20}",
+                pattern: "^[A-Za-z ]{6,20}",
                 message: "Title must have minimun is 6 charaters and maximun is 20 charaters",
                 require: true,
                 value: product.title
@@ -190,17 +243,20 @@
 
     initData();
     const renderProducts = () => {
-
-        body.innerHTML = '';
+        // const loading = document.getElementById('loading');
+        body.innerHTML = ``;
+        // loading.innerHTML = `<div class="spinner-border text-info" role="status" style="height: 50px; width: 50px">
+        //                         <span class="visually-hidden">Loading...</span>
+        //                     </div>`;
         $.ajax({
-            url: `http://localhost:8080/api/products?page=${page || 0}&size=${size || 0}`,
+            url: `http://localhost:8080/api/products?page=${page || 0}&size=${size || 0}&search=${search || ''}&sort=${sort.field},${sort.sortBy}&priceMax=${max}&priceMin=${min}`,
             method: 'GET'
         }).done(data => {
             products = data.content;
             totalPage = data.totalPages;
-            renderPagination();
+            let str= ""
             products.forEach((product, index) => {
-                body.innerHTML += `<tr>
+                str += `<tr>
                                 <td>${product.id}</td>
                                 <td>${product.title}</td>
                                 <td>${product.code || ''}</td>
@@ -213,6 +269,13 @@
                                </tr>`
 
             })
+            body.innerHTML = str;
+            //loading.style.display = 'none !important';
+            renderPagination();
+            if(page > 0 && products.length === 0){
+                page = 0;
+                renderProducts();
+            }
         });
     }
 
@@ -247,6 +310,26 @@
         }
         //console.log(page);
         page = pageChange - 1;
+        renderProducts();
+    }
+    function onSearch(){
+        search = document.getElementById('search').value;
+        renderProducts();
+    }
+
+    function onSort(str){
+        if(sort.field === str){
+            sort.sortBy = sort.sortBy === 'desc' ? 'asc' : 'desc';
+        }else{
+            sort.field = str;
+            sort.sortBy = 'asc';
+        }
+        renderProducts();
+    }
+
+    function onFilter(){
+        min = document.getElementById('min').value;
+        max = document.getElementById('max').value;
         renderProducts();
     }
 </script>

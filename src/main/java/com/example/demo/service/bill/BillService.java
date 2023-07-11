@@ -29,7 +29,7 @@ public class BillService {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void create(BillSaveRequest request){
         //check phonenumber of customer
         // if exist update field

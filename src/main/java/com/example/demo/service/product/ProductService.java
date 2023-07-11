@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<ProductListResponse> findAllWithSearchAndPaging(String search, Pageable pageable){
+
+    public Page<ProductListResponse> findAllWithSearchAndPaging(String search, String priceMin, String priceMax, Pageable pageable){
 //        Page<Product> products = productRepository
 //                .findByTitleContainingOrCodeContainingOrCategory_NameContaining(search, search,search,pageable);
 //
@@ -39,8 +41,12 @@ public class ProductService {
 //        return productRepository
 //                .findByTitleContainingOrCodeContainingOrCategory_NameContaining(search, search,search,pageable)
 //                .map(product -> new ProductListResponse(product.getId(), product.getTitle(), product.getCode(), product.getPrice(), product.getCategory().getName()));
+
+        List<Product> products = productRepository.findAll();
+        search  = "%" + search + "%";
         return productRepository
-                .findByTitleContainingOrCodeContainingOrCategory_NameContaining(search, search,search,pageable)
+                .searchEverything(search,
+                        new BigDecimal(priceMin), new BigDecimal(priceMax),pageable)
                 .map(product -> {
                     var response = AppUtils.mapper.map(product, ProductListResponse.class);
                     response.setCategoryName(product.getCategory().getName());
