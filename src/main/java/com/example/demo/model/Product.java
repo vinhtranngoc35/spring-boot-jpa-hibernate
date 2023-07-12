@@ -18,6 +18,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(name = "title", nullable = false)
     private String title;
 
