@@ -66,13 +66,6 @@ public class ProductController {
                                 @CookieValue(defaultValue = "", value = "demo") String demo,
                                 HttpServletResponse response,
                                 HttpServletRequest request){
-        Cookie cookie = new Cookie("demo", "Hello");
-        response.addCookie(cookie);
-        cookie.setMaxAge(24 * 60 * 60);
-        var cookies = request.getCookies();
-        for (var item : cookies) {
-            System.out.println(item.getValue());
-        }
         //model.addAttribute("products", productService.findAllWithSearchAndPaging(search, "", "", pageable));
         return "index";
     }

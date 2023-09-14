@@ -25,6 +25,7 @@ public class ProductService {
     }
 
 
+    @Transactional(readOnly = true)
     public Page<ProductListResponse> findAllWithSearchAndPaging(String search, String priceMin, String priceMax, Pageable pageable){
 //        Page<Product> products = productRepository
 //                .findByTitleContainingOrCodeContainingOrCategory_NameContaining(search, search,search,pageable);
@@ -38,21 +39,21 @@ public class ProductService {
 //        Page<ProductListResponse> responsePage = new PageImpl<>(productListResponses, pageable, products.getTotalPages());
 
         // di qua cac phan tu xong map tu product qua productlistresponse.
-//        return productRepository
-//                .findByTitleContainingOrCodeContainingOrCategory_NameContaining(search, search,search,pageable)
-//                .map(product -> new ProductListResponse(product.getId(), product.getTitle(), product.getCode(), product.getPrice(), product.getCategory().getName()));
-
-        List<Product> products = productRepository.findAll();
-        search  = "%" + search + "%";
         return productRepository
-                .searchEverything(search,
-                        new BigDecimal(priceMin), new BigDecimal(priceMax),pageable)
-                .map(product -> {
-                    var response = AppUtils.mapper.map(product, ProductListResponse.class);
-                    response.setCategoryName(product.getCategory().getName());
-                    return response;
-                });
+                .findByTitleContainingOrCodeContainingOrCategory_NameContaining(search, search,search,pageable)
+                .map(product -> new ProductListResponse(product.getId(), product.getTitle(), product.getCode(), product.getPrice(), product.getCategory().getName()));
+
+//        search  = "%" + search + "%";
+//        return productRepository
+//                .searchEverything(search,
+//                        new BigDecimal(priceMin), new BigDecimal(priceMax),pageable)
+//                .map(product -> {
+//                    var response = AppUtils.mapper.map(product, ProductListResponse.class);
+//                    response.setCategoryName(product.getCategory().getName());
+//                    return response;
+//                });
     }
+
 
     public void create(ProductSaveRequest request){
 

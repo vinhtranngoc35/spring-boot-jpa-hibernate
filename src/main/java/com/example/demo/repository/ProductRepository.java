@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.Product;
+import io.micrometer.observation.ObservationFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,7 @@ public interface ProductRepository  extends JpaRepository<Product, Long> {
 
 
 
-    Page<Product> findByTitleContainingOrCodeContainingOrCategory_NameContainingAndPriceBetween(String title, String code, String category_name, BigDecimal price, BigDecimal price2, Pageable pageable);
+    Page<Product> findByTitleContainsOrCode(String title, String code, String category_name, BigDecimal price, BigDecimal price2, Pageable pageable);
+
+    Page<Product> findByTitleContainingOrCodeContainingOrCategory_NameContaining(String search, String search1, String search2, Pageable pageable);
 }

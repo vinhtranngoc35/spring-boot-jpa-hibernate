@@ -22,6 +22,8 @@ public class AuthController {
         return "login";
     }
 
+
+
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
         // create model object to store form data
