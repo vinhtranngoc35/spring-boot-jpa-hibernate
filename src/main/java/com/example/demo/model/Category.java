@@ -12,6 +12,7 @@ public class Category {
     private Long id;
 
 
+    @Column(columnDefinition = "LONGTEXT")
     private String name;
 
     @OneToMany(mappedBy = "category")

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Service
+
 public class BillService {
 
     private final ProductRepository productRepository;
@@ -29,7 +30,7 @@ public class BillService {
     }
 
 
-    @Transactional(readOnly = true)
+
     public void create(BillSaveRequest request){
         //check phonenumber of customer
         // if exist update field

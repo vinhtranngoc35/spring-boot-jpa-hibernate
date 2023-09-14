@@ -30,7 +30,9 @@ public class SpringSecurity {
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/index").permitAll()
-                                .requestMatchers("/products").hasRole("USER")
+                                .requestMatchers("/products").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/api/**").permitAll()
+                                .anyRequest().authenticated()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
@@ -48,7 +50,7 @@ public class SpringSecurity {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .userDetailsService(userDetailsService) // config để biết class này dùng để check user login
+                .passwordEncoder(passwordEncoder()); // loại mã hóa password
     }
 }

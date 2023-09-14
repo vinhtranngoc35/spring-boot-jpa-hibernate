@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 public class ProductSaveRequest {
     @NotBlank
     private String price;
+
+    private String code;
     private String title;
     private SelectOptionRequest category;
 
@@ -38,5 +40,13 @@ public class ProductSaveRequest {
 
     public void setCategory(SelectOptionRequest category) {
         this.category = category;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

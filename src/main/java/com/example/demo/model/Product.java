@@ -2,8 +2,6 @@ package com.example.demo.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -39,7 +37,7 @@ public class Product {
         this.category = category;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -102,7 +100,7 @@ public class Product {
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
     }
-    @PreUpdate
+    @PreRemove
     public void calculateUpdated(){
         this.updated = LocalDateTime.now();
     }
