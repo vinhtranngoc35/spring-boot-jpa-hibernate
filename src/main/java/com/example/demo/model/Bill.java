@@ -21,7 +21,7 @@ public class Bill {
     private LocalDate dateBought;
 
     private BigDecimal totalAmount;
-
+//dhjgdhjfsdgfsjhfghjgsasdasasaasdasdafdsdf
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
